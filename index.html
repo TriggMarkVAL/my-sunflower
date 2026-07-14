@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="color-scheme" content="light only">
+<meta name="theme-color" content="#FAF67A">
+<title>For My Sunflower</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Caveat:wght@500;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #FAF67A;
+    --paper-dark: #EEE968;
+    --ink: #40501F;
+    --sun: #F4C430;
+    --sun-deep: #D98E1E;
+    --leaf: #A3B86C;
+    --leaf-dark: #758B42;
+    --center: #7A4A22;
+    --sky: #CBEAFE;
+    --shadow: rgba(64,80,31,0.18);
+  }
+  *{box-sizing:border-box;}
+  html{ color-scheme:light; background:#FAF67A; }
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 20% 8%, rgba(203,234,254,0.55), transparent 42%),
+      radial-gradient(circle at 85% 15%, rgba(244,196,48,0.18), transparent 38%),
+      radial-gradient(circle at 80% 90%, rgba(117,139,66,0.18), transparent 42%),
+      var(--paper);
+    background-attachment:fixed;
+    font-family:'Nunito', sans-serif;
+    color:var(--ink);
+    overflow-x:hidden;
+  }
+  /* subtle paper grain */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(74,55,40,0.02) 0px, transparent 1px, transparent 2px, rgba(74,55,40,0.02) 3px);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .page{
+    min-height:100svh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:8vh 6vw;
+    position:relative;
+    text-align:center;
+  }
+
+  h1,h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    margin:0 0 0.4em 0;
+    line-height:1.15;
+  }
+  .script{
+    font-family:'Caveat', cursive;
+    color:var(--sun-deep);
+  }
+
+  /* ---------- SUNFLOWER (signature element) ---------- */
+  .sunflower-wrap{
+    width:min(46vw, 180px);
+    height:min(46vw, 180px);
+    margin:0 auto 1.2em auto;
+    position:relative;
+  }
+  .petal{
+    position:absolute;
+    left:50%; top:50%;
+    width:26%; height:44%;
+    background:linear-gradient(180deg, var(--sun), var(--sun-deep));
+    border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+    transform-origin:50% 100%;
+    opacity:0;
+    transform: translate(-50%,-100%) rotate(var(--r)) scale(0.3);
+    transition: transform 0.6s cubic-bezier(.2,1.4,.4,1), opacity 0.6s ease;
+    transition-delay: var(--d);
+  }
+  .sunflower-wrap.bloom .petal{
+    opacity:1;
+    transform: translate(-50%,-100%) rotate(var(--r)) scale(1);
+  }
+  .center{
+    position:absolute; left:50%; top:50%;
+    width:36%; height:36%;
+    background:radial-gradient(circle at 35% 30%, #9c6a35, var(--center));
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.3);
+    z-index:2;
+  }
+
+  /* ---------- COVER ---------- */
+  #cover{
+    z-index:1;
+  }
+  .eyebrow{
+    font-family:'Caveat', cursive;
+    font-size:1.3rem;
+    color:var(--leaf-dark);
+    margin-bottom:0.2em;
+  }
+  #cover h1{ font-size:clamp(2rem,7vw,3rem); }
+  .tap-hint{
+    margin-top:3em;
+    font-family:'Caveat', cursive;
+    font-size:1.4rem;
+    color:var(--sun-deep);
+    animation:bob 2s ease-in-out infinite;
+  }
+  @keyframes bob{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(8px);} }
+
+  /* ---------- WELCOME ---------- */
+  .note-card{
+    background:var(--paper-dark);
+    border-radius:6px;
+    padding:2.2em 1.8em;
+    max-width:480px;
+    box-shadow:0 10px 30px var(--shadow);
+    transform:rotate(-1deg);
+    position:relative;
+  }
+  .note-card::after{
+    content:"";
+    position:absolute; top:-14px; left:50%; transform:translateX(-50%) rotate(-3deg);
+    width:70px; height:26px;
+    background:rgba(203,234,254,0.75);
+    border:1px solid rgba(203,234,254,0.9);
+  }
+  .note-card p{
+    font-family:'Caveat', cursive;
+    font-size:1.5rem;
+    line-height:1.5;
+    margin:0.4em 0;
+    color:var(--ink);
+  }
+
+  /* ---------- SCRAPBOOK / PHOTOS ---------- */
+  #scrapbook{ min-height:auto; padding-top:6vh; padding-bottom:6vh; }
+  .section-title{ font-size:clamp(1.6rem,5vw,2.2rem); margin-bottom:0.15em; }
+  .section-sub{ font-family:'Caveat',cursive; font-size:1.2rem; color:var(--leaf-dark); margin-bottom:2em; }
+
+  .polaroid-grid{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:2.2em 1.4em;
+    max-width:900px;
+  }
+  .polaroid{
+    background:#fffef8;
+    padding:14px 14px 44px 14px;
+    box-shadow:0 8px 20px var(--shadow);
+    width:min(72vw, 240px);
+    transform:rotate(var(--rot));
+    transition:transform 0.25s ease;
+  }
+  .polaroid:nth-child(odd){ --rot:-3deg; }
+  .polaroid:nth-child(even){ --rot:2.5deg; }
+  .polaroid:hover{ transform:rotate(0deg) scale(1.03); }
+  .photo-slot{
+    width:100%;
+    aspect-ratio:1/1;
+    background:
+      linear-gradient(135deg, var(--sky), var(--paper-dark));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--sun-deep);
+    font-family:'Nunito',sans-serif;
+    font-size:0.8rem;
+    font-weight:700;
+    text-align:center;
+    padding:0.6em;
+    border:1px dashed var(--sun-deep);
+  }
+  .polaroid img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .polaroid figcaption{
+    font-family:'Caveat', cursive;
+    font-size:1.25rem;
+    margin-top:10px;
+    color:var(--ink);
+  }
+
+  /* ---------- LOVE LETTER ---------- */
+  #letter{ background:transparent; }
+  .letter-card{
+    background:var(--paper-dark);
+    max-width:520px;
+    padding:2.4em 2em;
+    box-shadow:0 10px 30px var(--shadow);
+    border-left:4px solid var(--sun-deep);
+    text-align:left;
+  }
+  .letter-card p{
+    font-family:'Caveat', cursive;
+    font-size:1.35rem;
+    line-height:1.6;
+    margin:0 0 0.9em 0;
+  }
+  .letter-sign{
+    text-align:right;
+    font-size:1.5rem;
+    color:var(--sun-deep);
+  }
+
+  /* ---------- FINAL / QUESTION ---------- */
+  #question{
+    background:linear-gradient(180deg, transparent, rgba(244,196,48,0.12));
+  }
+  #question h2{ font-size:clamp(1.7rem,6vw,2.4rem); }
+  .instruction{
+    font-family:'Caveat', cursive;
+    font-size:1.3rem;
+    color:var(--leaf-dark);
+    max-width:360px;
+    margin:1.2em 0 2.2em 0;
+  }
+  .yes-btn{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    background:var(--sun-deep);
+    color:#fff8ea;
+    border:none;
+    padding:0.9em 2.4em;
+    border-radius:40px;
+    cursor:pointer;
+    box-shadow:0 8px 20px rgba(217,142,30,0.4);
+    transition:transform 0.15s ease;
+  }
+  .yes-btn:active{ transform:scale(0.95); }
+  .yes-btn:hover{ transform:translateY(-2px); }
+
+  /* ---------- CELEBRATION / COUNTER ---------- */
+  #together{ display:none; }
+  #together.show{ display:flex; }
+  .counter-card{
+    background:var(--paper-dark);
+    border-radius:10px;
+    padding:2.2em 1.8em;
+    box-shadow:0 10px 30px var(--shadow);
+    max-width:420px;
+  }
+  .counter-label{ font-family:'Caveat',cursive; font-size:1.3rem; color:var(--leaf-dark); }
+  .counter-num{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(2.2rem,10vw,3.4rem);
+    color:var(--sun-deep);
+    margin:0.1em 0;
+  }
+  .counter-sub{ font-family:'Nunito'; font-size:0.95rem; color:var(--ink); opacity:0.75; }
+
+  .petal-fall{
+    position:fixed; top:-5vh; z-index:50;
+    width:14px; height:14px;
+    background:var(--sun);
+    border-radius:50% 0 50% 50%;
+    pointer-events:none;
+    animation:fall linear forwards;
+  }
+  @keyframes fall{
+    to{ transform:translateY(110vh) rotate(400deg); opacity:0.2; }
+  }
+
+  .loading{ font-family:'Caveat',cursive; font-size:1.2rem; color:var(--leaf-dark); }
+
+  /* ---------- TINY PERSONAL DETAILS ---------- */
+  .motif{
+    position:absolute;
+    opacity:0.16;
+    pointer-events:none;
+    color:var(--leaf-dark);
+  }
+  #scrapbook .motif{ width:46px; height:46px; top:18px; right:22px; }
+  #letter .motif{ width:40px; height:40px; bottom:14px; left:18px; transform:rotate(-8deg); }
+
+  .sparkle-trail{
+    position:absolute;
+    width:120px;
+    left:50%; top:-6px;
+    transform:translateX(-50%);
+    pointer-events:none;
+    opacity:0.8;
+  }
+  .dust-tag{
+    font-family:'Caveat', cursive;
+    font-size:1rem;
+    color:var(--leaf-dark);
+    opacity:0.55;
+    letter-spacing:0.04em;
+    margin-top:0.6em;
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .petal, .tap-hint, .petal-fall{ animation:none !important; transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<section class="page" id="cover">
+  <div class="sunflower-wrap" id="sun1">
+    <div class="center"></div>
+    <div class="petal" style="--r:0deg; --d:0s"></div>
+    <div class="petal" style="--r:45deg; --d:0.05s"></div>
+    <div class="petal" style="--r:90deg; --d:0.1s"></div>
+    <div class="petal" style="--r:135deg; --d:0.15s"></div>
+    <div class="petal" style="--r:180deg; --d:0.2s"></div>
+    <div class="petal" style="--r:225deg; --d:0.25s"></div>
+    <div class="petal" style="--r:270deg; --d:0.3s"></div>
+    <div class="petal" style="--r:315deg; --d:0.35s"></div>
+  </div>
+  <div class="eyebrow">a little something for</div>
+  <h1>My Sunflower</h1>
+  <svg class="sparkle-trail" viewBox="0 0 120 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 16C20 10 40 6 60 8C80 10 100 16 116 10" stroke="var(--sky)" stroke-width="2" stroke-linecap="round" stroke-dasharray="1 6"/>
+    <circle cx="60" cy="8" r="2" fill="var(--center)"/>
+    <circle cx="30" cy="12" r="1.4" fill="var(--sky)"/>
+    <circle cx="90" cy="11" r="1.4" fill="var(--sky)"/>
+  </svg>
+  <div class="dust-tag">est. UST, Manila 🧪</div>
+  <div class="tap-hint">↓ open me ↓</div>
+</section>
+
+<!-- ============ WELCOME ============ -->
+<section class="page" id="welcome">
+  <div class="note-card">
+    <!-- WRITE YOUR OWN: replace these lines with your real welcome note -->
+    <p>[your own opening line — hey you, hi love, whatever you'd actually say]</p>
+    <p>[a line or two about why you made this]</p>
+  </div>
+</section>
+
+<!-- ============ SCRAPBOOK ============ -->
+<section class="page" id="scrapbook">
+  <svg class="motif" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="42" stroke="currentColor" stroke-width="4"/>
+    <circle cx="35" cy="40" r="5" fill="currentColor"/>
+    <circle cx="62" cy="55" r="7" fill="currentColor"/>
+    <circle cx="55" cy="30" r="3" fill="currentColor"/>
+    <circle cx="40" cy="65" r="4" fill="currentColor"/>
+  </svg>
+  <h2 class="section-title">Some of my favorites</h2>
+  <div class="section-sub">— in no particular order —</div>
+  <div class="polaroid-grid">
+    <!-- EDIT ME: replace each .photo-slot div with <img src="your-photo-url.jpg" alt="..."> to swap in a real photo -->
+    <figure class="polaroid">
+      <div class="photo-slot">[photo: the day we met]</div>
+      <figcaption>where it started</figcaption>
+    </figure>
+    <figure class="polaroid">
+      <div class="photo-slot">[photo: that trip we took]</div>
+      <figcaption>best weekend ever</figcaption>
+    </figure>
+    <figure class="polaroid">
+      <div class="photo-slot">[photo: waiting for you outside UST]</div>
+      <figcaption>still worth the wait after your 8-hour lab</figcaption>
+    </figure>
+    <figure class="polaroid">
+      <div class="photo-slot">[photo: us being ridiculous]</div>
+      <figcaption>my favorite kind of chaos</figcaption>
+    </figure>
+    <figure class="polaroid">
+      <div class="photo-slot">[photo: your favorite meal]</div>
+      <figcaption>you and your food face</figcaption>
+    </figure>
+    <figure class="polaroid">
+      <div class="photo-slot">[photo: quiet night in]</div>
+      <figcaption>this is my favorite version of us</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ LOVE LETTER ============ -->
+<section class="page" id="letter">
+  <svg class="motif" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M35 85h30" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+    <path d="M50 85V65" stroke="currentColor" stroke-width="4"/>
+    <path d="M38 65h24l-4-14H42l-4 14z" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M46 51V30" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="46" cy="24" r="7" stroke="currentColor" stroke-width="4"/>
+    <path d="M28 68c0-6 4-10 8-10" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+  </svg>
+  <h2 class="section-title">A letter</h2>
+  <div class="letter-card">
+    <!-- WRITE YOUR OWN: replace these lines with your real letter -->
+    <p>[paragraph one]</p>
+    <p>[paragraph two]</p>
+    <p>[paragraph three, if you want one]</p>
+    <div class="letter-sign">— [your name]</div>
+  </div>
+</section>
+
+<!-- ============ THE QUESTION ============ -->
+<section class="page" id="question">
+  <div class="sunflower-wrap" id="sun2">
+    <div class="center"></div>
+    <div class="petal" style="--r:0deg; --d:0s"></div>
+    <div class="petal" style="--r:45deg; --d:0.05s"></div>
+    <div class="petal" style="--r:90deg; --d:0.1s"></div>
+    <div class="petal" style="--r:135deg; --d:0.15s"></div>
+    <div class="petal" style="--r:180deg; --d:0.2s"></div>
+    <div class="petal" style="--r:225deg; --d:0.25s"></div>
+    <div class="petal" style="--r:270deg; --d:0.3s"></div>
+    <div class="petal" style="--r:315deg; --d:0.35s"></div>
+  </div>
+  <h2 id="questionTitle">Okay. Look up at me.</h2>
+  <div class="instruction">(this next part isn't on the screen — go ahead, ask her)</div>
+  <button class="yes-btn" id="yesBtn">she said yes 🌻</button>
+</section>
+
+<!-- ============ TOGETHER COUNTER ============ -->
+<section class="page" id="together">
+  <div class="counter-card">
+    <div class="counter-label">together for</div>
+    <div class="counter-num" id="counterMain">0 days</div>
+    <div class="counter-sub" id="counterSub">since —</div>
+  </div>
+
+  <figure class="polaroid" id="yesPolaroid" style="margin-top:2.4em;">
+    <div class="photo-slot" id="yesPhotoSlot">
+      <label for="yesPhotoInput" style="cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:0.4em;">
+        <span style="font-size:1.6rem;">＋</span>
+        <span>add the photo<br>from today</span>
+      </label>
+      <input type="file" id="yesPhotoInput" accept="image/*" style="display:none;">
+    </div>
+    <figcaption>the day she said yes</figcaption>
+  </figure>
+</section>
+
+<script>
+// ===== STORAGE SETUP =====
+// Uses KVdb.io (free, no-login key-value store) so the "together for" moment AND her photo
+// are saved to the cloud and show correctly from ANY device — her phone, your phone, a PC, etc.
+//
+// SETUP (one time, ~30 seconds):
+// 1. Go to https://kvdb.io in a browser
+// 2. Enter your email and create a bucket — it gives you a bucket ID like "Fd55uogXyxYdnXJvnyN8Xo"
+// 3. Paste that ID below, replacing YOUR_BUCKET_ID_HERE
+const KVDB_BUCKET = 'XLhuZGX4rLvjufM64p9Rg2';
+const KVDB_KEY = 'sunflower-yes-moment';
+const KVDB_URL = `https://kvdb.io/${KVDB_BUCKET}/${KVDB_KEY}`;
+
+let savedData = null; // { startISO, photo (base64 dataURL, optional) }
+
+function formatDuration(ms){
+  const totalSeconds = Math.floor(ms/1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400)/3600);
+  const mins = Math.floor((totalSeconds % 3600)/60);
+  const secs = totalSeconds % 60;
+  return {days, hours, mins, secs};
+}
+
+function launchPetals(n){
+  for(let i=0;i<n;i++){
+    setTimeout(()=>{
+      const p = document.createElement('div');
+      p.className='petal-fall';
+      p.style.left = Math.random()*100+'vw';
+      p.style.animationDuration = (3+Math.random()*2)+'s';
+      p.style.background = Math.random()>0.5 ? 'var(--sun)' : 'var(--sun-deep)';
+      document.body.appendChild(p);
+      setTimeout(()=>p.remove(), 6000);
+    }, i*60);
+  }
+}
+
+async function saveData(){
+  try{
+    await fetch(KVDB_URL, { method: 'PUT', body: JSON.stringify(savedData) });
+  }catch(e){
+    console.error('Could not save permanently:', e);
+  }
+}
+
+function renderPhotoSlot(){
+  const slot = document.getElementById('yesPhotoSlot');
+  if(savedData && savedData.photo){
+    slot.innerHTML = `<img src="${savedData.photo}" alt="the day she said yes">`;
+  } else {
+    slot.innerHTML = `<label for="yesPhotoInput" style="cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:0.4em;">
+      <span style="font-size:1.6rem;">＋</span>
+      <span>add the photo<br>from today</span>
+    </label>
+    <input type="file" id="yesPhotoInput" accept="image/*" style="display:none;">`;
+    document.getElementById('yesPhotoInput').addEventListener('change', handlePhotoUpload);
+  }
+}
+
+function handlePhotoUpload(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev)=>{
+    const img = new Image();
+    img.onload = ()=>{
+      // resize down so the saved payload stays small
+      const maxW = 800;
+      const scale = Math.min(1, maxW / img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.75);
+      savedData.photo = dataUrl;
+      renderPhotoSlot();
+      saveData();
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function startCounter(){
+  const startDate = new Date(savedData.startISO);
+  const sub = document.getElementById('counterSub');
+  sub.textContent = 'since ' + startDate.toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
+  const mainEl = document.getElementById('counterMain');
+  function tick(){
+    const diff = Date.now() - startDate.getTime();
+    const {days,hours,mins,secs} = formatDuration(Math.max(diff,0));
+    mainEl.innerHTML = days + ' day' + (days===1?'':'s') +
+      '<br><span style="font-size:0.4em;opacity:0.8">' +
+      String(hours).padStart(2,'0')+':'+String(mins).padStart(2,'0')+':'+String(secs).padStart(2,'0') +
+      '</span>';
+  }
+  tick();
+  setInterval(tick, 1000);
+  renderPhotoSlot();
+  document.getElementById('together').classList.add('show');
+  document.getElementById('together').scrollIntoView({behavior:'smooth'});
+}
+
+async function checkExistingYes(){
+  try{
+    const res = await fetch(KVDB_URL);
+    if(res.ok){
+      const text = await res.text();
+      if(text && text.trim()){
+        savedData = JSON.parse(text);
+        if(savedData && savedData.startISO){
+          document.getElementById('yesBtn').style.display='none';
+          document.getElementById('questionTitle').textContent = "she said yes 🌻";
+          const instr = document.querySelector('#question .instruction');
+          if(instr) instr.textContent = "this moment is saved, forever";
+          startCounter();
+        }
+      }
+    }
+  }catch(e){
+    // no existing record yet, or offline — first visit shows the question
+  }
+}
+
+document.getElementById('yesBtn').addEventListener('click', async () => {
+  const nowISO = new Date().toISOString();
+  savedData = { startISO: nowISO };
+  launchPetals(60);
+  document.getElementById('yesBtn').disabled = true;
+  document.getElementById('yesBtn').textContent = '🌻🌻🌻';
+  await saveData();
+  setTimeout(()=>{ startCounter(); }, 1200);
+});
+
+// bloom animation on scroll into view
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){ entry.target.classList.add('bloom'); }
+  });
+}, {threshold:0.4});
+document.querySelectorAll('.sunflower-wrap').forEach(el=>observer.observe(el));
+
+// wire up initial (pre-yes) photo input, in case someone somehow reaches it
+const initialInput = document.getElementById('yesPhotoInput');
+if(initialInput) initialInput.addEventListener('change', handlePhotoUpload);
+
+checkExistingYes();
+</script>
+</body>
+</html>
